@@ -29,7 +29,8 @@ include_path = ".:/usr/lib/php/pear”
 # Install Packer
 Follow Packer install steps [Packer](http://www.packer.io/docs/installation.html)
 
-
+# Usage 
+Within /phing/ run "phing"
 
 
 

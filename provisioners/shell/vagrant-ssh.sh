@@ -9,6 +9,5 @@ wget --no-check-certificate -O authorized_keys 'https://github.com/mitchellh/vag
 mv authorized_keys /home/vagrant/.ssh
 chmod 0600 /home/vagrant/.ssh/authorized_keys
 chown -R vagrant /home/vagrant/.ssh
-echo 'vagrant ALL=NOPASSWD: ALL' >> /etc/sudoers
 
-echo 'Welcome to your Packer-Vagrant built virtual machine.' > /etc/motd
+echo 'Welcome to your Packer-Phing built virtual machine.' > /etc/motd
