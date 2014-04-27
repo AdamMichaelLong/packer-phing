@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="vagrantBuild" basedir="../" default="package">
+
+  <!-- Prepare -->
+  <target name="prepare">
+    <tstamp>
+      <format property="build.time" pattern="%Y%m%d%H%I%S" />
+    </tstamp>
+    <propertyprompt propertyName="buildname"
+          promptText="Enter a name for the package build. " defaultValue="build-${build.time}" />
+    <input propertyName="package" defaultValue="ubuntu-13.10-amd64" validargs="ubuntu-12.04-amd64,ubuntu-13.10-amd64">Enter one of the available OS images. </input>
+    <input propertyName="share_folder" defaultValue="true" validargs="true,false">Enable a mounted share folder? </input>
+    <propertyprompt propertyName="vm_ip"
+          promptText="Enter valid local static IP to assign to the Vagrant VM once provisioned. " defaultValue="192.168.0.15" />
+    <mkdir dir="./build/${buildname}" />
+  </target>
+
+  <!-- Build -->
+  <target name="build" depends="prepare">
+    <exec command="packer -force -debug build ./box-templates/${package}.json" passthru="true"/>
+    <fileset dir="phing/src/templates/vagrant/" id="vagrantFiles">
+      <include name="**" />
+    </fileset>
+    <copy todir="./build/${buildname}">
+      <fileset refid="vagrantFiles" />
+      <!-- Rename file extensions -->
+      <mapper type="glob" from="*.tpl" to="*"/>
+      <filterchain>
+        <!-- Expand templates -->
+        <expandproperties/>
+      </filterchain>
+    </copy>
+  </target>
+
+ <!-- Package & Up-->
+  <target name="package" depends="build">
+    <if>
+      <available file="./build/${package}.box"/>
+      <then>
+        <move file="./build/${package}.box" todir="./build/${buildname}/" overwrite="true" />
+          <input propertyName="vagrant_up" defaultValue="true" validargs="true,false">Run Vagrant Up?</input>
+           <if>
+             <equals arg1="true"  arg2="${vagrant_up}" />
+            <then> 
+             <exec command="sudo vagrant up" passthru="true" dir="./build/${buildname}" />
+            </then>
+          </if>
+      </then>
+    </if>
+  </target>
+
+</project>
