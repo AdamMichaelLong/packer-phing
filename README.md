@@ -2,6 +2,7 @@ packer-phing
 =================
 
 Using Packer and Phing to auto build Vagrant base-boxes.
+[more info on Packer-Phing](http://adammichaellong.github.io/packer-phing/)
 
 # Required
 [Packer](http://packer.io)
